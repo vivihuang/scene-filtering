@@ -14,8 +14,29 @@ code {
     monospace;
 }
 
+.app {
+    padding: 20px;
+}
+
+header h1 {
+    text-align: center;
+}
+
+.content {
+    display: flex;
+}
+
+.left {
+    flex: 0 0 1200px;
+}
+
+.right {
+    flex: 1;
+}
+
 .videoList {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .icon-wrapper {
