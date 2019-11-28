@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 import * as THREE from "three";
-import {LINE_STEP, VIDEO_LENGTH} from "./constant";
+import {LINE_STEP} from "./constant";
 
 const _width = 400;
 const _height = 800;
 
 export default class Three extends Component {
-    timer = 1;
     animationId = null;
     scene = null;
     renderer = null;
@@ -32,7 +31,7 @@ export default class Three extends Component {
         document.body.appendChild(this.renderer.domElement);
         let geometry = new THREE.Geometry();
         geometry.vertices.push(new THREE.Vector3(400, 0, 0)); //x, y, z
-        geometry.vertices.push(new THREE.Vector3(400, -this.timer * LINE_STEP, 0));
+        geometry.vertices.push(new THREE.Vector3(400, -LINE_STEP, 0));
         geometry.verticesNeedUpdate = true;
         geometry.dynamic = true;
 
@@ -51,12 +50,13 @@ export default class Three extends Component {
                 this.handlePause()
             }
         }
-        // if (currentTime !== prevProps.currentTime) {
-        //     this.handleChange(currentTime)
-        // } else {
-        //     this.handleCorrection(sliderTime)
-        // }
+        if (currentTime !== prevProps.currentTime) {
+            this.handleUpdate(currentTime)
+        } else {
+            this.handleUpdate(sliderTime)
+        }
     }
+
 
     renderLine = () => {
         this.renderer.render(this.scene, this.camera);
@@ -72,15 +72,11 @@ export default class Three extends Component {
             this.renderLine();
         };
         animate();
-        const timerInterval = setInterval(() => {
-            this.timer = this.timer + 1;
-            this.line.geometry.vertices[1].y = -this.timer * LINE_STEP;
-            this.line.geometry.verticesNeedUpdate = true;
-            if (this.timer === VIDEO_LENGTH) {
-                this.timer = 0;
-                clearInterval(timerInterval)
-            }
-        }, 1000)
+    }
+
+    handleUpdate = (timer) => {
+        this.line.geometry.vertices[1].y = -(timer + 1) * LINE_STEP;
+        this.line.geometry.verticesNeedUpdate = true;
     }
 
     render() {

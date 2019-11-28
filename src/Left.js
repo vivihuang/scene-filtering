@@ -66,7 +66,6 @@ export default class Left extends React.Component {
     handleChange = (value) => {
         this.videoRefs.forEach((item) => {
             if (item.current.currentTime !== value) {
-                console.log(value, item.current.currentTime)
                 item.current.currentTime = value
             }
         })
