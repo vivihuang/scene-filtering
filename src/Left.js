@@ -24,7 +24,7 @@ export default class Left extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { isPlaying, currentTime, sliderTime } = this.props;
-        if (isPlaying !== prevProps.isPlaying) { 
+        if (isPlaying !== prevProps.isPlaying) {
             if (isPlaying) {
                 this.handlePlay()
             } else {

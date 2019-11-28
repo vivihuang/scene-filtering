@@ -4,6 +4,8 @@ import Left from "./Left";
 import './App.css';
 import Icon from "antd/lib/icon";
 import Slider from "antd/lib/slider";
+import Three from "./Three";
+import {VIDEO_LENGTH} from "./constant";
 
 export default class App extends React.Component {
     timer = null;
@@ -52,6 +54,7 @@ export default class App extends React.Component {
                 </header>
                 <div className="content">
                     <Left isPlaying={isPlaying} currentTime={currentTime} sliderTime={sliderTime}/>
+                    <Three isPlaying={isPlaying} currentTime={currentTime} sliderTime={sliderTime} />
                 </div>
                 <div className="icon-wrapper">
                     {
@@ -59,7 +62,7 @@ export default class App extends React.Component {
                             ? <Icon type="pause-circle" onClick={this.handlePause}/>
                             : <Icon type="play-circle" onClick={this.handlePlay}/>
                     }
-                    <Slider onChange={this.handleChange} max={888} value={sliderTime} />
+                    <Slider onChange={this.handleChange} max={VIDEO_LENGTH} value={sliderTime} />
                 </div>
             </div>
         );
