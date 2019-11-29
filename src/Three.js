@@ -12,6 +12,7 @@ export default class Three extends Component {
     renderer = null;
     camera = null;
     lines = new Array(LINES.length).fill("");
+    dots = new Array(DYNAMIC_DOTS.length).fill("");
 
     componentDidMount() {
         this.initScene();
@@ -60,12 +61,14 @@ export default class Three extends Component {
         const dotMaterial = new THREE.PointsMaterial({size: 10, color: CAR_DOT.color});
         const dot = new THREE.Points(dotGeometry, dotMaterial);
         this.scene.add(dot);
-        DYNAMIC_DOTS.forEach((item) => {
+        DYNAMIC_DOTS.forEach((item, index) => {
             const dotGeometry = new THREE.Geometry();
             dotGeometry.vertices.push(new THREE.Vector3(item.x, item.y, 0));
+            dotGeometry.verticesNeedUpdate = true;
+            dotGeometry.dynamic = true;
             const dotMaterial = new THREE.PointsMaterial({size: 10, color: item.color});
-            const dot = new THREE.Points(dotGeometry, dotMaterial);
-            this.scene.add(dot);
+            this.dots[index] = new THREE.Points(dotGeometry, dotMaterial);
+            this.scene.add(this.dots[index]);
         })
     }
 
@@ -73,11 +76,11 @@ export default class Three extends Component {
         LINES.forEach((item, index) => {
             let geometry = new THREE.Geometry();
             geometry.vertices.push(new THREE.Vector3(item.x, 0, 0)); //x, y, z
-            geometry.vertices.push(new THREE.Vector3(item.x, -item.yStep, 0));
+            geometry.vertices.push(new THREE.Vector3(item.x, item.y, 0));
             geometry.verticesNeedUpdate = true;
             geometry.dynamic = true;
 
-            let material = new THREE.LineBasicMaterial({color: item.color, linewidth: 10});
+            const material = new THREE.LineBasicMaterial({color: item.color, linewidth: 10});
             this.lines[index] = new THREE.Line(geometry, material);
             this.scene.add(this.lines[index]);
         })
@@ -100,12 +103,9 @@ export default class Three extends Component {
     }
 
     handleUpdate = (timer) => {
-        LINES.forEach((item, index) => {
-            if (item.xStep) {
-                this.lines[index].geometry.vertices[1].x = item.x + timer * item.xStep;
-            }
-            this.lines[index].geometry.vertices[1].y = -(timer + 1) * item.yStep;
-            this.lines[index].geometry.verticesNeedUpdate = true;
+        DYNAMIC_DOTS.forEach((item, index) => {
+            this.dots[index].geometry.vertices[0].y = -(timer + 1) * item.yStep + item.y;
+            this.dots[index].geometry.verticesNeedUpdate = true;
         })
     }
 
