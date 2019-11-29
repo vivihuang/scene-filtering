@@ -13,6 +13,7 @@ export default class Three extends Component {
     camera = null;
     lines = new Array(LINES.length).fill("");
     dots = new Array(DYNAMIC_DOTS.length).fill("");
+    arrow = null;
 
     componentDidMount() {
         this.initScene();
@@ -50,9 +51,26 @@ export default class Three extends Component {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(_width, _height);
         document.body.appendChild(this.renderer.domElement);
+        this.initArrows();
         this.initLines();
         this.initDots();
         this.renderScene()
+    }
+
+    initArrows = () => {
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3(330, -500, 0));
+        geometry.vertices.push(new THREE.Vector3(370, -500, 0));
+        geometry.vertices.push(new THREE.Vector3(350, -400, 0));
+        geometry.vertices.push(new THREE.Vector3(330, -500, 0));
+        geometry.verticesNeedUpdate = true;
+        geometry.dynamic = true;
+
+        this.arrow = new THREE.Line(
+            geometry,
+            new THREE.LineBasicMaterial({ color: 0x000000 })
+        );
+        this.scene.add(this.arrow);
     }
 
     initDots = () => {
@@ -107,6 +125,15 @@ export default class Three extends Component {
             this.dots[index].geometry.vertices[0].y = -(timer + 1) * item.yStep + item.y;
             this.dots[index].geometry.verticesNeedUpdate = true;
         })
+        const arrowTimer = timer % 20;
+        if (arrowTimer <= 5) {
+            this.arrow.geometry.vertices[2].x = 350 + arrowTimer * 4;
+        } else if (arrowTimer >=10 && arrowTimer <=15) {
+            this.arrow.geometry.vertices[2].x = 350 - arrowTimer;
+        } else {
+            this.arrow.geometry.vertices[2].x = 350;
+        }
+        this.arrow.geometry.verticesNeedUpdate = true;
     }
 
     render() {
