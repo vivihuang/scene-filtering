@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import * as THREE from "three";
 
-import {LINES} from "./constant";
+import {CAR_DOT, DYNAMIC_DOTS, LINES} from "./constant";
 
 const _width = 400;
 const _height = 800;
@@ -50,7 +50,23 @@ export default class Three extends Component {
         this.renderer.setSize(_width, _height);
         document.body.appendChild(this.renderer.domElement);
         this.initLines();
+        this.initDots();
         this.renderScene()
+    }
+
+    initDots = () => {
+        const dotGeometry = new THREE.Geometry();
+        dotGeometry.vertices.push(new THREE.Vector3(CAR_DOT.x, CAR_DOT.y, 0));
+        const dotMaterial = new THREE.PointsMaterial({size: 10, color: CAR_DOT.color});
+        const dot = new THREE.Points(dotGeometry, dotMaterial);
+        this.scene.add(dot);
+        DYNAMIC_DOTS.forEach((item) => {
+            const dotGeometry = new THREE.Geometry();
+            dotGeometry.vertices.push(new THREE.Vector3(item.x, item.y, 0));
+            const dotMaterial = new THREE.PointsMaterial({size: 10, color: item.color});
+            const dot = new THREE.Points(dotGeometry, dotMaterial);
+            this.scene.add(dot);
+        })
     }
 
     initLines = () => {
